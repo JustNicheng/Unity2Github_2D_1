@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class playerMove : MonoBehaviour
@@ -13,13 +14,13 @@ public class playerMove : MonoBehaviour
     // Update is called once per frame
     bool checkLand()
     {
-        Ray ray2D = new Ray(transform.position, new Vector2(0, -1));
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray2D, out hit))
+        Ray2D ray2D = new Ray2D(transform.position, new Vector2(0, -1));
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(0, -1));
+        if (hit.collider.name != "")
         {
-            if (hit.distance <= 1.5)
+            if (hit.distance <= 0.8f)
             {
+                this.transform.position +=new Vector3(0.0f, 0.8f - hit.distance,0.0f);
                 return true;
             }
         }
