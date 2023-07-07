@@ -11,6 +11,7 @@ public class playerMove : MonoBehaviour
         
     }
     Vector2 moveSpeed = new Vector2(0, 0);
+    
     // Update is called once per frame
     bool checkLand()
     {
@@ -26,7 +27,7 @@ public class playerMove : MonoBehaviour
         }
         return false;
     }
-    void doG()
+    void doGravity()
     {
         if (checkLand())
         {
@@ -37,12 +38,24 @@ public class playerMove : MonoBehaviour
             moveSpeed.y -= 1.0f;
         }
     }
+    void getKeyDown()
+    {
+        float msX = 0.0f;
+        float msY = 0.0f;
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) msX -= 1.0f;
+        if (Input.GetKeyDown(KeyCode.RightArrow)) msX += 1.0f;
+        moveSpeed = new Vector2(msX+moveSpeed.x, msY+moveSpeed.y);
+    }
     void Update()
     {
-        doG();
+        doGravity();
+        getKeyDown();
+    }
+    void doMove() {
+        transform.position += new Vector3(moveSpeed.x * 0.0025f, moveSpeed.y * 0.0025f, 0.0f);
     }
     private void FixedUpdate()
     {
-        transform.position += new Vector3(moveSpeed.x * 0.0025f, moveSpeed.y * 0.0025f,0.0f);
+        doMove();
     }
 }
