@@ -15,17 +15,32 @@ public class playerMove : MonoBehaviour
     // Update is called once per frame
     bool checkLand()
     {
-        Ray2D ray2D = new Ray2D(transform.position, new Vector2(0, -1));
         RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(0, -1));
-        if (hit.collider.name != "")
+        if ( hit.collider != null && hit.collider.name != "")
         {
-            if (hit.distance <= 0.8f)
+            if (hit.distance <= 0.1f)
             {
-                this.transform.position +=new Vector3(0.0f, 0.8f - hit.distance,0.0f);
+                this.transform.position +=new Vector3(0.0f, 0.1f - hit.distance,0.0f);
                 return true;
             }
         }
         return false;
+    }
+
+    int checkWall()//0：沒牆、1：樓梯斜坡等、2：地下道、3：牆壁、4：沒有牆，前方也沒有地板(第4個是給NPC的)
+    {
+        for (int i =  0; i <= 4; i++)
+        {
+            for (float j = 0.0f; j <= 0.2f; j += 0.02f)
+            {
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, moveSpeed);
+                if (hit.distance == 0.0f)
+                {
+                    return i;
+                }
+            }
+        }
+        return 0;
     }
     void doGravity()
     {
@@ -52,7 +67,7 @@ public class playerMove : MonoBehaviour
         getKeyDown();
     }
     void doMove() {
-        transform.position += new Vector3(moveSpeed.x * 0.0025f, moveSpeed.y * 0.0025f, 0.0f);
+        transform.position += new Vector3(moveSpeed.x*Time.deltaTime, moveSpeed.y * Time.deltaTime, 0.0f);
     }
     private void FixedUpdate()
     {
